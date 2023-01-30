@@ -15,8 +15,8 @@
 			<f:viewAction action="#{gestaoEmpresasBean.todasEmpresas}" />
 		</f:metadata>
 
-		<h:form>
-			<p:messages autoUpdate="true" />
+		<h:form id="frm">
+			<p:messages id="messages" />
 			<p:toolbar>
 				<f:facet name="left">
 					<p:inputText id="termoPesquisa"
@@ -25,7 +25,7 @@
 
 					<p:commandButton value="Pesquisar" icon="fa fa-search"
 						actionListener="#{gestaoEmpresasBean.pesquisar}"
-						update="empresasDataTable" process="@this termoPesquisa"/>
+						update="empresasDataTable messages" process="@this termoPesquisa"/>
 
 					<span class="ui-separator"> <span
 						class="ui-icon ui-icon-grip-dotted-vertical"/>
@@ -79,6 +79,8 @@
 			<p:dialog id="empresaDialog" header="Nova Empresa"
 				widgetVar="empresaDialogWidgetVar" modal="true" resizable="false"
 				closeOnEscape="true">
+				<p:messages id="empresaMessages" />
+
 
 				<h:panelGrid id="empresaPanelGrid" columns="2"
 					rendered="#{gestaoEmpresasBean.empresa ne null}">
@@ -87,14 +89,14 @@
 						value="#{gestaoEmpresasBean.empresa.razaoSocial}" />
 
 					<p:outputLabel value="Nome Fantasia: " for="nomeFantasia" />
-					<p:inputText id="nomeFantasia" size="80" maxlength="120"
+					<p:inputText id="nomeFantasia" size="80" maxlength="80"
 						value="#{gestaoEmpresasBean.empresa.nomeFantasia}" />
 
 					<p:outputLabel value="Tipo Empresa: " for="tipo" />
 					<p:selectOneMenu id="tipo"
 						value="#{gestaoEmpresasBean.empresa.tipo}">
 						<f:selectItem itemLabel="Selecione..." />
-						<f:selectItems value="#{gestaoEmpresasBean.tipoEmpresa}"
+						<f:selectItems value="#{gestaoEmpresasBean.tiposEmpresa}"
 							var="tipoEmpresa" itemLabel="#{tipoEmpresa.descricao}"
 							itemValue="#{tipoEmpresa}" />
 					</p:selectOneMenu>
@@ -117,8 +119,8 @@
 					<h:outputLabel />
 					<p:commandButton value="Salvar"
 						actionListener="#{gestaoEmpresasBean.salvar}"
-						update="empresasDataTable empresaPanelGrid"
-						oncomplete="PF('empresaDialogWidgetVar').hide()"
+						update="empresaPanelGrid empresaMessages"
+						oncomplete="if (!args.validationFailed) PF('empresaDialogWidgetVar').hide()"
 						process="empresaDialog" />
 				</h:panelGrid>
 
