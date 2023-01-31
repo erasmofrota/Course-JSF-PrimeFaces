@@ -52,19 +52,26 @@ public class GestaoEmpresasBean implements Serializable {
 	public void prepararEdicao() {
 		ramoAtividadeConverter = new RamoAtividadeConverter(Arrays.asList(empresa.getRamoAtividade()));
 	}
+	
 
 	public void salvar() {
 		cadastroEmpresaService.salvar(empresa);
 
-		if (jaHouvePesquisa()) {
-			pesquisar();
-		} else {
-			todasEmpresas();
-		}
+		atualizarRegistros();
 
 		messages.info("Empresa salva com sucesso!");
 
 		RequestContext.getCurrentInstance().update(Arrays.asList("frm:empresasDataTable", "frm:messages"));
+	}
+	
+	public void excluir() {
+		cadastroEmpresaService.excluir(empresa);
+		
+		empresa = null;
+		
+		atualizarRegistros();
+		
+		messages.info("Empresa excluída com sucesso!");
 	}
 
 	public void pesquisar() {
@@ -86,6 +93,14 @@ public class GestaoEmpresasBean implements Serializable {
 		ramoAtividadeConverter = new RamoAtividadeConverter(listaRamoAtividades);
 
 		return listaRamoAtividades;
+	}
+	
+	private void atualizarRegistros () {
+		if (jaHouvePesquisa()) {
+			pesquisar();
+		} else {
+			todasEmpresas();
+		}
 	}
 
 	private boolean jaHouvePesquisa() {
